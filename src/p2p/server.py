@@ -23,7 +23,7 @@ def client_join(clients, address, sock):
     print('connection from: {}'.format(address))
     clients.append(address)
     sock.sendto(b'ready', address)
-    client_send_info(clients, sock)
+    # client_send_info(clients, sock)
 
     return clients
 
