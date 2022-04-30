@@ -1,9 +1,9 @@
 import socket
 
-known_port = 50002
+known_port = 40000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('0.0.0.0', 55555))
+sock.bind(('0.0.0.0', 40000))
 
 while True:
     clients = []
@@ -13,6 +13,7 @@ while True:
 
         print('connection from: {}'.format(address))
         clients.append(address)
+        print(clients)
 
         sock.sendto(b'ready', address)
 
