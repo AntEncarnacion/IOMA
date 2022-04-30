@@ -29,7 +29,7 @@ def client_join(clients, address, sock):
 
 def client_exit(clients, index, sock):
     clients.pop(index)
-    client_send_info(clients, sock)
+    # client_send_info(clients, sock)
 
     return clients
 
