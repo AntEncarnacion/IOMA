@@ -38,8 +38,8 @@ def client_send_info(clients, sock):
     # for client in clients:
     #     encoded_list = bytes(clients)
     #     sock.sendto(encoded_list, client)
-    sock.sendto('{} {} {}'.format(clients[0], clients[0], 40000).encode(), clients[1])
-    sock.sendto('{} {} {}'.format(clients[1], clients[1], 40000).encode(), clients[0])
+    sock.sendto('{} {} {}'.format(clients[0][0], clients[0][1], 40000).encode(), clients[1])
+    sock.sendto('{} {} {}'.format(clients[1][0], clients[1][1], 40000).encode(), clients[0])
 
 if __name__ == '__main__':
     main()
