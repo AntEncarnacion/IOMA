@@ -10,14 +10,14 @@ def main():
         while True:
             data, address = sock.recvfrom(128)
 
-            client_join(clients, address, sock)
+            clients = client_join(clients, address, sock)
             if len(clients) == 2:
                 print('got 2 clients, sending details to each')
                 client_send_info(clients, sock)
                 break
 
-        client_exit(clients, 0)
-        client_exit(clients, 1)
+        clients = client_exit(clients, 0)
+        clients = client_exit(clients, 1)
 
 def client_join(clients, address, sock):
     print('connection from: {}'.format(address))
@@ -25,9 +25,13 @@ def client_join(clients, address, sock):
     sock.sendto(b'ready', address)
     client_send_info(clients, sock)
 
+    return clients
+
 def client_exit(clients, index, sock):
     clients.pop(index)
     client_send_info(clients, sock)
+
+    return clients
 
 def client_send_info(clients, sock):
     # scalable future implementation
