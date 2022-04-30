@@ -13,9 +13,9 @@ def main():
             clients = client_join(clients, address, sock)
             if len(clients) == 2:
                 print('got 2 clients, sending details to each')
-                client_send_info(clients, sock)
                 break
 
+        client_send_info(clients, sock)
         clients = client_exit(clients, 0)
         clients = client_exit(clients, 1)
 
