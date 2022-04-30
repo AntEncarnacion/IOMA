@@ -17,7 +17,7 @@ def main():
 
         client_send_info(clients, sock)
         clients = client_exit(clients, 0, sock)
-        clients = client_exit(clients, 1, sock)
+        clients = client_exit(clients, 0, sock)
 
 def client_join(clients, address, sock):
     print('connection from: {}'.format(address))
