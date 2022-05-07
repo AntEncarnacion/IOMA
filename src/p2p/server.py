@@ -35,11 +35,18 @@ def client_exit(clients, index, sock):
 
 def client_send_info(clients, sock):
     # scalable future implementation
+    # encoded_list = format_clients_to_string(clients).encode()
     # for client in clients:
-    #     encoded_list = bytes(clients)
     #     sock.sendto(encoded_list, client)
     sock.sendto('{} {} {}'.format(clients[0][0], clients[0][1], 40000).encode(), clients[1])
     sock.sendto('{} {} {}'.format(clients[1][0], clients[1][1], 40000).encode(), clients[0])
+
+def format_clients_to_string(clients):
+    formatted_list = ''
+    for client in clients:
+        for data in client:
+            formatted_list += str(data) + ' '
+    return formatted_list[:-1]
 
 if __name__ == '__main__':
     main()
