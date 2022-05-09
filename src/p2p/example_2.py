@@ -6,7 +6,7 @@ def main_client():
     local_ip=getlocal_ip()
     sport=50000
     dport=40000
-    server_ip='10.0.0.124'
+    server_ip='172.29.95.223'
 
     
     data_list_of_peer=connect_to_server(server_ip,sport,dport)    
