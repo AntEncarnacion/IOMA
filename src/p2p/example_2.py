@@ -51,7 +51,7 @@ def connect_to_server(server_ip,sport,dport):
 
     
     
-def listen(sport):
+def listen():
     # listen for
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(('0.0.0.0', sport))
