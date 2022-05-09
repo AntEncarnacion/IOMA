@@ -16,7 +16,7 @@ def main_client():
     punch_hole(dport,sport,tuple_data)
     listener = threading.Thread(target=listen, daemon=True);
     listener.start()
-    send_message(dport,tuple_data)
+    send_message(dport,tuple_data,local_ip)
 
     
 
@@ -71,7 +71,7 @@ def punch_hole(dport,sport,tuple_data):
 
         print('ready to exchange messages\n')    
 
-def send_message(dport,tuple_data):
+def send_message(dport,tuple_data,local_ip):
     # send messages
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', dport))
