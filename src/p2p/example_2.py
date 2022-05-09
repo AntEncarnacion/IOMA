@@ -12,7 +12,7 @@ def main_client():
     data_list_of_peer=connect_to_server(server_ip,sport,dport)    
     tuple_data=convertstr_into_tupple(data_list_of_peer)
     print_peer(tuple_data)
-    punch_hole(dport,sport)
+    punch_hole(dport,sport,tuple_data)
     listener = threading.Thread(target=listen, daemon=True);
     listener.start()
     send_message(dport,tuple_data)
@@ -59,7 +59,7 @@ def listen():
         data = sock.recv(1024)
         print('\rpeer: {}\n> '.format(data.decode()), end='')
 
-def punch_hole(dport,sport):
+def punch_hole(dport,sport,tuple_data):
         # punch hole
         print('punching hole')
 
