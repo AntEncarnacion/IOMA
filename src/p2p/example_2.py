@@ -1,11 +1,12 @@
 import socket
 import sys
 import threading
+sport=50000
+dport=40000
 
 def main_client():
     local_ip=getlocal_ip()
-    sport=50000
-    dport=40000
+    
     server_ip='172.29.95.223'
 
     
