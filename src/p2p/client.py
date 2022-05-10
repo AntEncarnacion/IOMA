@@ -16,10 +16,15 @@ def main_client():
     punch_hole(dport,sport,tuple_data)
     listener = threading.Thread(target=listen, daemon=True);
     listener.start()
-    send_message(dport,tuple_data,local_ip)
 
-    
+    exit_flag = False
 
+    while True:
+        msg = input('> ')
+        if(exit_flag):
+            client_leave()
+            break
+        send_message(dport,tuple_data,local_ip)
     
 def getlocal_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -27,17 +32,18 @@ def getlocal_ip():
     local_ip=s.getsockname()[0]
     s.close()
     return local_ip
+
 def connect_to_server(server_ip,sport,dport):
 
         rendezvous = (server_ip, dport)
     
-    # 10.0.0.124 192.168.0.2
-    # connect to rendezvous
+        # 10.0.0.124 192.168.0.2
+        # connect to rendezvous
         print('connecting to rendezvous server')
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(('0.0.0.0', sport))
-        sock.sendto(b'0', rendezvous)
+        sock.sendto(b'join', rendezvous)
 
         while True:
             data = sock.recv(1024).decode()
@@ -48,8 +54,7 @@ def connect_to_server(server_ip,sport,dport):
 
         data = sock.recv(1024).decode()
         return data
-
-    
+   
     
 def listen():
     # listen for
@@ -72,15 +77,24 @@ def punch_hole(dport,sport,tuple_data):
         print('ready to exchange messages\n')    
 
 def send_message(dport,tuple_data,local_ip):
-    # send messages
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('0.0.0.0', dport))
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('0.0.0.0', dport))
 
-        while True:
-            msg = input('> ')
-            for client in tuple_data:
-                if client[0] != local_ip:
-                    sock.sendto(msg.encode(), (client[0], sport))
+    # send messages
+    for client in tuple_data:
+        if client[0] != local_ip:
+            sock.sendto(msg.encode(), (client[0], sport))
+
+def client_leave(server_ip, dport):
+    rendezvous = (server_ip, dport)
+
+    # 10.0.0.124 192.168.0.2
+    # connect to rendezvous
+    print('connecting to rendezvous server')
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('0.0.0.0', sport))
+    sock.sendto(b'leave', rendezvous)
 
 # def print_ip_of_client(tuple_data):
 #     for client in tuple_data:
