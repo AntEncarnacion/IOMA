@@ -66,15 +66,15 @@ def listen():
         print('\rpeer: {}\n> '.format(data.decode()), end='')
 
 def punch_hole(dport,sport,tuple_data):
-        # punch hole
-        print('punching hole')
+    # punch hole
+    print('punching hole')
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('0.0.0.0', sport))
-        for client in tuple_data:
-            sock.sendto(b'0', (client[0], dport))
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('0.0.0.0', sport))
+    for client in tuple_data:
+        sock.sendto(b'0', (client[0], dport))
 
-        print('ready to exchange messages\n')    
+    print('ready to exchange messages\n')    
 
 def send_message(dport,tuple_data,local_ip):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
