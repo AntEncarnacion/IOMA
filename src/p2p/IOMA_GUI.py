@@ -32,6 +32,10 @@ peerList.pack()
 messageList = Listbox(right_frame,height=25, width=50)
 messageList.pack()
 
+#Button so the peers can download entire conversation
+downloadButton = Button(right_frame, text="Download Conversation")
+downloadButton.pack()
+
 #Label that says "Message: "
 messageLabel = Label(right_frame, text="Message: ")
 messageLabel.pack()
