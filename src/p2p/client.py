@@ -1,8 +1,8 @@
 import socket
 import sys
 import threading
-sport=50000
-dport=40000
+peer_port=50000
+server_port=40000
 
 def main_client():
     local_ip=getlocal_ip()
@@ -10,21 +10,24 @@ def main_client():
     server_ip='172.29.95.223'
 
     
-    data_list_of_peer=connect_to_server(server_ip,sport,dport)    
+    data_list_of_peer=connect_to_server(server_ip,peer_port,server_port)    
     tuple_data=convertstr_into_tupple(data_list_of_peer)
     print_peer(tuple_data)
-    punch_hole(dport,sport,tuple_data)
-    listener = threading.Thread(target=listen, daemon=True);
+    punch_hole(server_port,peer_port,tuple_data)
+    listener_server = threading.Thread(target=lambda tuple_data:listen_server(tuple_data), daemon=True);
+    listener_server.start()
+    listener = threading.Thread(target=listen_peer, daemon=True);
     listener.start()
 
     exit_flag = False
-
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('0.0.0.0', server_port))
     while True:
         msg = input('> ')
         if(exit_flag):
             client_leave()
             break
-        send_message(dport,tuple_data,local_ip)
+        send_message(server_port,tuple_data,local_ip)
     
 def getlocal_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -33,16 +36,16 @@ def getlocal_ip():
     s.close()
     return local_ip
 
-def connect_to_server(server_ip,sport,dport):
+def connect_to_server(server_ip,peer_port,server_port):
 
-        rendezvous = (server_ip, dport)
+        rendezvous = (server_ip, server_port)
     
         # 10.0.0.124 192.168.0.2
         # connect to rendezvous
         print('connecting to rendezvous server')
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('0.0.0.0', sport))
+        sock.bind(('0.0.0.0', peer_port))
         sock.sendto(b'join', rendezvous)
 
         while True:
@@ -55,45 +58,54 @@ def connect_to_server(server_ip,sport,dport):
         data = sock.recv(1024).decode()
         return data
    
-    
-def listen():
+def listen_peer():
     # listen for
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(('0.0.0.0', sport))
+    sock.bind(('0.0.0.0', peer_port))
 
     while True:
         data = sock.recv(1024)
-        print('\rpeer: {}\n> '.format(data.decode()), end='')
+        print('\rpeer: {}\n> '.format(data.decode()), end='') 
 
-def punch_hole(dport,sport,tuple_data):
+def listen_server(tuple_data):
+    # listen for
+    #lambda
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('0.0.0.0', server_port))
+
+    while True:
+        data = sock.recv(1024).decode()
+        tuple_data=convertstr_into_tupple(data)
+        
+
+def punch_hole(server_port,peer_port,tuple_data):
     # punch hole
     print('punching hole')
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(('0.0.0.0', sport))
+    sock.bind(('0.0.0.0', peer_port))
     for client in tuple_data:
-        sock.sendto(b'0', (client[0], dport))
+        sock.sendto(b'0', (client[0], server_port))
 
     print('ready to exchange messages\n')    
 
-def send_message(dport,tuple_data,local_ip):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(('0.0.0.0', dport))
+def send_message(server_port,tuple_data,local_ip):
+    
 
     # send messages
     for client in tuple_data:
         if client[0] != local_ip:
-            sock.sendto(msg.encode(), (client[0], sport))
+            sock.sendto(msg.encode(), (client[0], peer_port))
 
-def client_leave(server_ip, dport):
-    rendezvous = (server_ip, dport)
+def client_leave(server_ip, server_port):
+    rendezvous = (server_ip, server_port)
 
     # 10.0.0.124 192.168.0.2
     # connect to rendezvous
     print('connecting to rendezvous server')
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(('0.0.0.0', sport))
+    sock.bind(('0.0.0.0', peer_port))
     sock.sendto(b'leave', rendezvous)
 
 # def print_ip_of_client(tuple_data):
