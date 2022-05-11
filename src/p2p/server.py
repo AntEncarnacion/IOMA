@@ -4,14 +4,15 @@ def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(('0.0.0.0', 40000))
 
+    clients = []
+
     while True:
-        clients = []
+        data, address = sock.recvfrom(128)
 
-        while True:
-            data, address = sock.recvfrom(128)
-
+        if(data.decode() == 'join'):
             clients = client_join(clients, address, sock)
-
+        elif(data.decode() == 'leave'):
+            clients = client_exit(clients, address, sock)
 
 def client_join(clients, address, sock):
     print(f'connection from: {address}')
@@ -31,8 +32,6 @@ def client_send_info(clients, sock):
     encoded_list = format_clients_to_string(clients).encode()
     for client in clients:
         sock.sendto(encoded_list, client)
-    # sock.sendto('{} {} {}'.format(clients[0][0], clients[0][1], 40000).encode(), clients[1])
-    # sock.sendto('{} {} {}'.format(clients[1][0], clients[1][1], 40000).encode(), clients[0])
 
 def format_clients_to_string(clients):
     formatted_list = ''
