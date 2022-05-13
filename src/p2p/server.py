@@ -9,6 +9,7 @@ def main():
     while True:
         data, address = sock.recvfrom(128)
         data = data.decode().split('|')
+        data = data.split('|')
 
         if 'join' == data[0]:
             clients = client_join(data, clients, address, sock)
@@ -20,8 +21,7 @@ def main():
 
 def client_join(data, clients, address, sock):
     print(f'connection from: {address}')
-    clients.append(address[0])
-    clients.append(data[1])
+    clients.append((address[0], data[1]))
 
     sock.sendto(b'ready', address)
     client_send_info(clients, sock)
