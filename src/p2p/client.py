@@ -34,7 +34,7 @@ def main_client():
     listener_server.start()
     
     # Create thread so that the port can listen for peer
-    listener = threading.Thread(target=lambda :listen_peer(peer_sock), daemon=True);
+    listener = threading.Thread(target=lambda :listen_peer(peer_sock,peers_list), daemon=True);
     listener.start()
 
     # exit_flag = False
@@ -71,11 +71,13 @@ def connect_to_server(server_sock,rendezvous):
     data = server_sock.recv(1024).decode()
     return data
    
-def listen_peer(peer_sock):
+def listen_peer(peer_sock,peers_list):
     # listen for peer socket
     while True:
-        data = peer_sock.recv(1024)
-        print('\rpeer: {}\n> '.format(data.decode()), end='') 
+        data, address = peer_sock.recv(1024)
+        for client in peers_list:
+                if client[0] == address[0]:
+                    print('\r{} {}\n> '.format(client[1],data.decode()), end='') 
 
 def listen_server(peers_list,server_sock):
     # listen for server socket
