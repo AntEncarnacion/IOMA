@@ -33,7 +33,7 @@ def main_client():
     punch_hole(peer_sock,peers_list)
     
     # Create thread so that the port can listen for server
-    listener_server = threading.Thread(target=lambda :listen_server(peers_list,server_sock), daemon=True);
+    listener_server = threading.Thread(target=lambda :listen_server(peers_list, server_sock), daemon=True);
     listener_server.start()
     
     # Create thread so that the port can listen for peer
@@ -76,12 +76,12 @@ def listen_peer(peer_sock):
         data = peer_sock.recv(1024)
         print('\rpeer: {}\n> '.format(data.decode()), end='') 
 
-def listen_server(peers_list,server_sock):
+def listen_server(peers_list, server_sock):
     # listen for server socket
 
     while True:
         data = server_sock.recv(1024).decode()
-        peers_list=convertstr_into_tupple(data)
+        peers_list.extend(convertstr_into_tupple(data))
         
 
 def punch_hole(peer_sock,peers_list):
