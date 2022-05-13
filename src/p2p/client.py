@@ -23,8 +23,8 @@ def main_client():
     # Connect to the server and receive list of client in format of data string
     data_list_of_peer=connect_to_server(server_sock,rendezvous)
 
-    # Convert data_list_of_peer to a list of tupple peer_list
-    peers_list=convertstr_into_tupple(data_list_of_peer)
+    # Convert data_list_of_peer to a list of tuple peer_list
+    peers_list=convertstr_into_tuple(data_list_of_peer)
 
     # Print the Peers
     print_peer(peers_list)
@@ -47,8 +47,8 @@ def main_client():
         else:
             send_message(peer_sock,msg,peers_list,local_ip) # Send message to other peers
     
+# Function to get local ip address
 def getlocal_ip():
-    # Function to get local ip address
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8",80))
     local_ip=s.getsockname()[0]
@@ -71,24 +71,23 @@ def connect_to_server(server_sock,rendezvous):
     data = server_sock.recv(1024).decode()
     return data
    
+# listen for peer socket
 def listen_peer(peer_sock,peers_list):
-    # listen for peer socket
     while True:
         data, address = peer_sock.recv(1024)
         for client in peers_list:
                 if client[0] == address[0]:
                     print('\r{} {}\n> '.format(client[1],data.decode()), end='') 
 
+# listen for server socket
 def listen_server(peers_list,server_sock):
-    # listen for server socket
     while True:
         data = server_sock.recv(1024).decode()
         peers_list.clear()
-        peers_list.extend(convertstr_into_tupple(data))
+        peers_list.extend(convertstr_into_tuple(data))
         
-
+# send messages
 def send_message(peer_sock,msg,peers_list,local_ip):
-    # send messages
     for client in peers_list:
         if client[0] != local_ip:
             peer_sock.sendto(msg.encode(), (client[0], peer_port))
@@ -102,16 +101,15 @@ def client_leave(rendezvous,server_sock):
 #     for client in peers_list:
 #         return client[0]        
     
-def print_peer(peers_list):
-    # Print peer list    
+# Print peer list
+def print_peer(peers_list):    
         for client in peers_list:
             print('\ngot peer')
             print('  ip:          {}'.format(client[0]))
             print('  username:          {}'.format(client[1]))
 
-
-def convertstr_into_tupple(data):
-    # convert data string into a list of tupple
+# convert data string into a list of tuple
+def convertstr_into_tuple(data):
     decoded_string = data
     li = list(decoded_string.split(" "))
     b=0
