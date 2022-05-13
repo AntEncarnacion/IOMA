@@ -9,7 +9,6 @@ def main():
     while True:
         data, address = sock.recvfrom(128)
         data = data.decode().split('|')
-        data = data.split('|')
 
         if 'join' == data[0]:
             clients = client_join(data, clients, address, sock)
