@@ -28,6 +28,9 @@ def main_client():
 
     # Print the Peers
     print_peer(peers_list)
+
+    #Punch hole
+    punch_hole(peer_sock,peers_list)
     
     # Create thread so that the port can listen for server
     listener_server = threading.Thread(target=lambda :listen_server(peers_list,server_sock), daemon=True);
@@ -37,15 +40,13 @@ def main_client():
     listener = threading.Thread(target=lambda :listen_peer(peer_sock), daemon=True);
     listener.start()
 
-    # exit_flag = False
+    exit_flag = False
     while True:
         msg = input('> ')
-
-        if(msg == 'exit'):
+        if(exit_flag):
             client_leave(rendezvous,server_sock) # Leave the chat
             break
-        else:
-            send_message(peer_sock,msg,peers_list,local_ip) # Send message to other peers
+        send_message(peer_sock,msg,peers_list,local_ip) # Send message to other peers
     
 def getlocal_ip():
     # Function to get local ip address
@@ -55,12 +56,10 @@ def getlocal_ip():
     s.close()
     return local_ip
 
-# Connect to the server and receive list of client in format of data string  
 def connect_to_server(server_sock,rendezvous):
-    username = input('Enter username: ')
+    # Connect to the server and receive list of client in format of data string  
     print('connecting to rendezvous server')
-    message = f'join|{username}'
-    server_sock.sendto(message.encode(), rendezvous)
+    server_sock.sendto(b'join', rendezvous)
     while True:
         data = server_sock.recv(1024).decode()
 
@@ -79,10 +78,18 @@ def listen_peer(peer_sock):
 
 def listen_server(peers_list,server_sock):
     # listen for server socket
+
     while True:
         data = server_sock.recv(1024).decode()
         peers_list=convertstr_into_tupple(data)
         
+
+def punch_hole(peer_sock,peers_list):
+    # punch hole
+    print('punching hole')
+    for client in peers_list:
+        peer_sock.sendto(b'0', (client[0], peer_port))
+    print('ready to exchange messages\n')    
 
 def send_message(peer_sock,msg,peers_list,local_ip):
     # send messages
@@ -91,9 +98,9 @@ def send_message(peer_sock,msg,peers_list,local_ip):
             peer_sock.sendto(msg.encode(), (client[0], peer_port))
 
 def client_leave(rendezvous,server_sock):
+
     print('connecting to rendezvous server')
-    message = f'leave|'
-    server_sock.sendto(message, rendezvous)
+    server_sock.sendto(b'leave', rendezvous)
 
 # def print_ip_of_client(peers_list):
 #     for client in peers_list:
@@ -104,23 +111,28 @@ def print_peer(peers_list):
         for client in peers_list:
             print('\ngot peer')
             print('  ip:          {}'.format(client[0]))
-            print('  username:          {}'.format(client[1]))
-
+            print('  source port: {}'.format(client[1]))
+            print('  dest port:   {}\n'.format(40000))
 
 def convertstr_into_tupple(data):
+   
     # convert data string into a list of tupple
     decoded_string = data
     li = list(decoded_string.split(" "))
     b=0
     c=0
     new_list= []
-    for val in li:
+    for i,val in enumerate(li):
+
         if b == 0:
             new_list.append(list())
             new_list[c].append(val) 
             b+=1
+        #elif b == 1:
+        #    newnew_list[c].append(int(val))
+        #    b+=1
         else:
-            new_list[c].append(val)
+            new_list[c].append(int(val))
             b=0
             c+=1
     newnew_list=[]        
