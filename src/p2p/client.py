@@ -94,7 +94,7 @@ def send_message(peer_sock,msg,peers_list,local_ip):
 def client_leave(rendezvous,server_sock):
     print('connecting to rendezvous server')
     message = f'leave|'
-    server_sock.sendto(message, rendezvous)
+    server_sock.sendto(message.encode(), rendezvous)
 
 # def print_ip_of_client(peers_list):
 #     for client in peers_list:
