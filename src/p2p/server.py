@@ -16,7 +16,8 @@ def main():
 
 def client_join(clients, address, sock):
     print(f'connection from: {address}')
-    clients.append(address)
+    clients.append((address[0], 40000))
+
     sock.sendto(b'ready', address)
     client_send_info(clients, sock)
 
