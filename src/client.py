@@ -9,7 +9,7 @@ def main_client():
     local_ip=getlocal_ip()
     
     # Server ip and port (40000)
-    server_ip='172.24.84.82'
+    server_ip='172.26.36.73'
     rendezvous = (server_ip, server_port)
 
     # Create a socket and bind it to '0.0.0.0.' and server port
