@@ -22,7 +22,7 @@ class Client:
         self.peer_sock.bind(('0.0.0.0', self.peer_port))
         
         # Connect to the server and receive list of client in format of data string
-        self.data_list_of_peer=self.connect_to_server(self.server_sock,self.rendezvous)
+        self.data_list_of_peer=self.connect_to_server()
 
         # Convert data_list_of_peer to a list of tuple peer_list
         self.peers_list=self.convertstr_into_tuple(self.data_list_of_peer)
@@ -31,11 +31,11 @@ class Client:
         # print_peer(peers_list)
         
         # Create thread so that the port can listen for server
-        self.listener_server = threading.Thread(target=lambda: self.listen_server(self.peers_list,self.server_sock), daemon=True);
+        self.listener_server = threading.Thread(target=lambda: self.listen_server(), daemon=True);
         self.listener_server.start()
         
         # Create thread so that the port can listen for peer
-        self.listener = threading.Thread(target=lambda: self.listen_peer(self.peer_sock,self.peers_list), daemon=True);
+        self.listener = threading.Thread(target=lambda: self.listen_peer(), daemon=True);
         self.listener.start()
 
         
@@ -52,7 +52,7 @@ class Client:
         username = input('Enter username: ')
         print('connecting to rendezvous server')
         message = f'join|{username}'
-        self.server_sock.sendto(message.encode(), self.rendezvous)
+        self.server_sock.sendto(message.encode())
         while True:
             data = self.server_sock.recv(1024).decode()
 
