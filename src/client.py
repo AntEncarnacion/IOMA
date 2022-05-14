@@ -101,7 +101,7 @@ class Client:
     #             print('  username:          {}'.format(client[1]))
 
     # convert data string into a list of tuple
-    def convertstr_into_tuple(data):
+    def convertstr_into_tuple(self, data):
         decoded_string = data
         li = list(decoded_string.split(" "))
         b=0
