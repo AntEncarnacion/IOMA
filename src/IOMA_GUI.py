@@ -2,6 +2,9 @@ from calendar import leapdays
 from struct import pack
 import tkinter as tk
 from tkinter import *
+import client
+
+client = client.Client()
 
 #main window
 window = tk.Tk()
@@ -45,8 +48,15 @@ messageTextBox = Text(right_frame,height=5, width=40)
 messageTextBox.pack()
 
 #Button that says "SEND"
-sendButton = Button(right_frame, text="SEND") #to add a function to the button just add ", command=yourfunction" inside parenthesis
+sendButton = Button(right_frame, text="SEND", command=lambda: submit) #to add a function to the button just add ", command=yourfunction" inside parenthesis
 sendButton.pack()
+
+def submit():  # Callback function for SUBMIT Button
+    text = messageTextBox.get("1.0", END)  # For line 1, col 0 to end.
+    client.send_message(text)
+    messageTextBox.delete("1.0", END)  # For line 1, col 0 to end.
+
+window.protocol("WM_DELETE_WINDOW", client.client_leave)
 
 
 #Size of the window and title of the window
