@@ -10,7 +10,7 @@ class Client:
         self.local_ip=self.getlocal_ip()
         
         # Server ip and port (40000)
-        self.server_ip='172.24.84.82'
+        self.server_ip='172.26.36.73'
         self.rendezvous = (self.server_ip, self.server_port)
 
         # Create a socket and bind it to '0.0.0.0.' and server port
