@@ -52,7 +52,7 @@ class Client:
         username = input('Enter username: ')
         print('connecting to rendezvous server')
         message = f'join|{username}'
-        self.server_sock.sendto(message.encode())
+        self.server_sock.sendto(message.encode(), self.rendezvous)
         while True:
             data = self.server_sock.recv(1024).decode()
 
