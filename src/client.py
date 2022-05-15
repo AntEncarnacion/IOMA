@@ -6,8 +6,7 @@ class Client:
     def __init__(self):
         self.peer_port=50000
         self.server_port=40000
-        # Function to get local ip address 
-        self.local_ip=self.getlocal_ip()
+
 
         self.message_list = []
         
@@ -22,6 +21,10 @@ class Client:
         # Create a socket and bind it to '0.0.0.0.' and peer port
         self.peer_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.peer_sock.bind(('0.0.0.0', self.peer_port))
+
+        # Function to get local ip address 
+        hostname = socket.gethostname()
+        self.local_ip = socket.gethostbyname(hostname)
         
         # Connect to the server and receive list of client in format of data string
         self.data_list_of_peer=self.connect_to_server()
@@ -40,7 +43,6 @@ class Client:
         self.listener = threading.Thread(target=lambda: self.listen_peer(), daemon=True);
         self.listener.start()
 
-        
     # Function to get local ip address
     def getlocal_ip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -69,9 +71,14 @@ class Client:
     def listen_peer(self):
         while True:
             data, address = self.peer_sock.recvfrom(1024)
-            for client in self.peers_list:
-                if client[0] != address[0]:
-                    self.message_list.append('{} {}'.format(client[1],data.decode()))
+            print(address[0])
+            print(self.local_ip)
+            if address[0] != self.local_ip:
+                for client in self.peers_list:
+                    if client[0] == address[0]:
+                        user = client[1]
+                        break
+                self.message_list.append('{} {}'.format(user,data.decode()))
 
     # listen for server socket
     def listen_server(self):
@@ -105,6 +112,7 @@ class Client:
     #             print('  username:          {}'.format(client[1]))
 
     # convert data string into a list of tuple
+
     def convertstr_into_tuple(self, data):
         decoded_string = data
         li = list(decoded_string.split(" "))

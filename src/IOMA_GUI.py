@@ -71,6 +71,7 @@ window.protocol("WM_DELETE_WINDOW", exit)
 
 def update_display(client):
     while True:
+
         if client.message_list != messageList:
             messageList.clear()
             messageListBox.delete(0, END)
