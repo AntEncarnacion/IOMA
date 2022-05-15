@@ -71,8 +71,7 @@ class Client:
     def listen_peer(self):
         while True:
             data, address = self.peer_sock.recvfrom(1024)
-            print(address[0])
-            print(self.local_ip)
+
             if address[0] != self.local_ip:
                 for client in self.peers_list:
                     if client[0] == address[0]:

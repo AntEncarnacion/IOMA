@@ -8,6 +8,10 @@ import threading
 
 client = client.Client()
 
+def download_messages(msg_list):
+    with open("file.txt", "w") as output:
+        output.write(str(msg_list))
+
 messageList = []
 peersList = []
 
@@ -41,7 +45,7 @@ messageListBox = Listbox(right_frame,height=25, width=50)
 messageListBox.pack()
 
 #Button so the peers can download entire conversation
-downloadButton = Button(right_frame, text="Download Conversation")
+downloadButton = Button(right_frame, text="Download Conversation", command=lambda: download_messages(messageList))
 downloadButton.pack()
 
 #Label that says "Message: "
