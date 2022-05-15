@@ -54,12 +54,12 @@ class Client:
         message = f'join|{self.username}'
         self.server_sock.sendto(message.encode(), self.rendezvous)
         while True:
-            data = self.server_sock.recv(1024).decode()
+            data, address = self.server_sock.recvfrom(1024).decode()
 
             if data.strip() == 'ready':
                 break
 
-        data = self.server_sock.recv(1024).decode()
+        data, address = self.server_sock.recvfrom(1024).decode()
         return data
     
     # listen for peer socket
@@ -77,7 +77,7 @@ class Client:
     # listen for server socket
     def listen_server(self):
         while True:
-            data = self.server_sock.recv(1024).decode()
+            data, address = self.server_sock.recvfrom(1024).decode()
             self.peers_list.clear()
             self.peers_list.extend(self.convertstr_into_tuple(data))
             
