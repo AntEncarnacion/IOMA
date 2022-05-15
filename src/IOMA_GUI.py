@@ -9,8 +9,9 @@ import threading
 client = client.Client()
 
 def download_messages(msg_list):
-    with open("file.txt", "w") as output:
-        output.write(str(msg_list))
+    with open('messages.txt', 'w') as filehandle:
+        for listitem in msg_list:
+            filehandle.write('%s\n' % listitem)
 
 messageList = []
 peersList = []
