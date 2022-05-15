@@ -93,25 +93,14 @@ class Client:
 
         for client in self.peers_list:
             if client[0] != self.local_ip:
-                self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
+                response = self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
+            while response != msg:
+                response = self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
 
     def client_leave(self):
         print('connecting to rendezvous server')
         message = f'leave|'
         self.server_sock.sendto(message.encode(), self.rendezvous)
-
-    # def print_ip_of_client(peers_list):
-    #     for client in peers_list:
-    #         return client[0]        
-        
-    # Print peer list
-    # def print_peer(self):    
-    #         for client in peers_list:
-    #             print('\ngot peer')
-    #             print('  ip:          {}'.format(client[0]))
-    #             print('  username:          {}'.format(client[1]))
-
-    # convert data string into a list of tuple
 
     def convertstr_into_tuple(self, data):
         decoded_string = data
