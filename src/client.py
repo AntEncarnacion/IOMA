@@ -8,6 +8,8 @@ class Client:
         self.server_port=40000
         # Function to get local ip address 
         self.local_ip=self.getlocal_ip()
+
+        self.message_list = []
         
         # Server ip and port (40000)
         self.server_ip='172.26.36.73'
@@ -49,9 +51,9 @@ class Client:
 
     # Connect to the server and receive list of client in format of data string  
     def connect_to_server(self):
-        username = input('Enter username: ')
+        self.username = input('Enter username: ')
         print('connecting to rendezvous server')
-        message = f'join|{username}'
+        message = f'join|{self.username}'
         self.server_sock.sendto(message.encode(), self.rendezvous)
         while True:
             data = self.server_sock.recv(1024).decode()
@@ -66,10 +68,10 @@ class Client:
     # listen for peer socket
     def listen_peer(self):
         while True:
-            data, address = self.peer_sock.recv(1024)
+            data, address = self.peer_sock.recvfrom(1024)
             for client in self.peers_list:
-                    if client[0] == address[0]:
-                        print('\r{} {}\n> '.format(client[1],data.decode()), end='') 
+                if client[0] != address[0]:
+                    self.message_list.append('{} {}'.format(client[1],data.decode()))
 
     # listen for server socket
     def listen_server(self):
@@ -80,6 +82,8 @@ class Client:
             
     # send messages
     def send_message(self, msg):
+        self.message_list.append(msg)
+
         for client in self.peers_list:
             if client[0] != self.local_ip:
                 self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
