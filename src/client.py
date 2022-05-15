@@ -7,10 +7,9 @@ class Client:
         self.peer_port=50000
         self.server_port=40000
 
-
         self.message_list = []
         
-        # Server ip and port (40000)
+        # Server ip
         self.server_ip=input("Input IP: ")
         self.rendezvous = (self.server_ip, self.server_port)
 

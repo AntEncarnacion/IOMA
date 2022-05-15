@@ -60,11 +60,10 @@ messageTextBox.pack()
 def submit():  # Callback function for SUBMIT Button
     text = messageTextBox.get("1.0", END)  # For line 1, col 0 to end.
     client.send_message(text[:-1])
-    # print(text)
     messageTextBox.delete("1.0", END)  # For line 1, col 0 to end.
     
 #Button that says "SEND"
-sendButton = Button(right_frame, text="SEND", command=submit) #to add a function to the button just add ", command=yourfunction" inside parenthesis
+sendButton = Button(right_frame, text="SEND", command=submit) 
 sendButton.pack()
 
 def exit():
