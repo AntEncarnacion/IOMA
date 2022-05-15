@@ -32,9 +32,6 @@ class Client:
         # Convert data_list_of_peer to a list of tuple peer_list
         self.peers_list=self.convertstr_into_tuple(self.data_list_of_peer)
 
-        # Print the Peers
-        # print_peer(peers_list)
-        
         # Create thread so that the port can listen for server
         self.listener_server = threading.Thread(target=lambda: self.listen_server(), daemon=True);
         self.listener_server.start()
@@ -54,14 +51,12 @@ class Client:
     # Connect to the server and receive list of client in format of data string  
     def connect_to_server(self):
         self.username = input('Enter username: ')
-        print('connecting to rendezvous server')
         message = f'join|{self.username}'
         self.server_sock.sendto(message.encode(), self.rendezvous)
         while True:
             data = self.server_sock.recv(1024).decode()
 
             if data.strip() == 'ready':
-                print('checked in with server, waiting')
                 break
 
         data = self.server_sock.recv(1024).decode()
@@ -97,7 +92,6 @@ class Client:
                     response = self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
 
     def client_leave(self):
-        print('connecting to rendezvous server')
         message = f'leave|'
         self.server_sock.sendto(message.encode(), self.rendezvous)
 
@@ -121,6 +115,3 @@ class Client:
         for val in new_list:
             newnew_list.append(tuple(val))
         return newnew_list   
-
-    # if __name__ == '__main__':
-    #     main_client()   

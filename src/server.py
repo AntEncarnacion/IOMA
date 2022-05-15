@@ -19,9 +19,7 @@ def main():
                     break
 
 def client_join(data, clients, address, sock):
-    print(f'connection from: {address}')
     clients.append((address[0], data[1]))
-
     sock.sendto(b'ready', address)
     client_send_info(clients, sock)
 

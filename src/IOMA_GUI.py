@@ -68,7 +68,6 @@ sendButton = Button(right_frame, text="SEND", command=submit) #to add a function
 sendButton.pack()
 
 def exit():
-    print("exit")
     client.client_leave()
     window.destroy()
 
