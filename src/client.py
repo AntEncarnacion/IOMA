@@ -77,7 +77,7 @@ class Client:
                     if client[0] == address[0]:
                         user = client[1]
                         break
-                self.message_list.append('{} {}'.format(user,data.decode()))
+                self.message_list.append('{}: {}'.format(user,data.decode()))
 
     # listen for server socket
     def listen_server(self):
