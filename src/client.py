@@ -94,7 +94,7 @@ class Client:
         for client in self.peers_list:
             if client[0] != self.local_ip:
                 response = self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
-                while response != msg:
+                while response != len(msg):
                     response = self.peer_sock.sendto(msg.encode(), (client[0], self.peer_port))
 
     def client_leave(self):
